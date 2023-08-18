@@ -303,11 +303,10 @@ void group(int fd, User &user) {
             break;
         }
         int option = stoi(choice);
-        if (groupOperation.find(option) != groupOperation.end()) {
-            groupOperation[option]();
-        } else {
-            cout << "没有这个选项，请重新输入" << endl;
+        if (groupOperation.find(option) == groupOperation.end()) {
+            continue;
         }
+        groupOperation[option]();
     }
 }
 
