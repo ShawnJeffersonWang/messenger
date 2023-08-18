@@ -168,7 +168,10 @@ void notify(int fd) {
     redis.connect();
     string UID;
 
-    recvMsg(fd, UID);
+    int ret=recvMsg(fd, UID);
+    if(ret==0){
+        redis.hdel("is_online",UID);
+    }
     //判断是否有好友添加
     if (redis.sismember("add_friend", UID)) {
 

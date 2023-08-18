@@ -23,7 +23,7 @@ public:
 
     void setUsername(string name);
 
-    string getMyTime();
+    [[nodiscard]] string getMyTime()const;
 
     [[nodiscard]] string getUsername() const;
 

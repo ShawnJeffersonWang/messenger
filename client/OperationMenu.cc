@@ -8,6 +8,7 @@
 #include <map>
 #include <iostream>
 #include <thread>
+#include <iomanip>
 #include "../utils/proto.h"
 #include "../utils/IO.h"
 
@@ -50,7 +51,8 @@ void clientOperation(int fd, User &user) {
             {8,  bind(&Telegram::unblocked, telegram, placeholders::_1)},
             {9,  bind(&Telegram::group, telegram, placeholders::_1)},
             {10, bind(&Telegram::sendFile, telegram, placeholders::_1)},
-            {11, bind(&Telegram::receiveFile, telegram, placeholders::_1)}
+            {11, bind(&Telegram::receiveFile, telegram, placeholders::_1)},
+            {12, bind(&Telegram::viewProfile, telegram, placeholders::_1)}
     };
 //    char *end_ptr;
 //    int opt_int = (int) strtol(opt.c_str(), &end_ptr, 10);
@@ -94,12 +96,12 @@ void clientOperation(int fd, User &user) {
 }
 
 void operationMenu(User &user) {
-    cout << "[1]开始聊天                [2]历史记录" << endl;
-    cout << "[3]查看好友                [4]添加好友" << endl;
-    cout << "[5]查看添加好友请求         [6]删除好友" << endl;
-    cout << "[7]屏蔽好友                [8]解除屏蔽" << endl;
-    cout << "[9]群聊                    [10]发送文件" << endl;
-    cout << "[11]接收文件" << endl;
+    cout << setw(30) << left << "[1]开始聊天"  << "[2]历史记录" << endl;
+    cout << setw(30) << left << "[3]查看好友"  << "[4]添加好友" << endl;
+    cout << setw(30) << left << "[5]查看添加好友请求"  << "[6]删除好友" << endl;
+    cout << setw(30) << left << "[7]屏蔽好友"  << "[8]解除屏蔽" << endl;
+    cout << setw(30) << left << "[9]群聊"  << "[10]发送文件" << endl;
+    cout << setw(30) << left << "[11]接收文件"  << "[12]查看我的个人信息" << endl;
     cout << "按[0]返回" << endl;
     cout << "请输入您的选择" << endl;
 }

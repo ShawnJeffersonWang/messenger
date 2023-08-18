@@ -36,6 +36,8 @@ public:
 
     void receiveFile(std::vector<std::pair<string, User>> &my_friends) const;
 
+    void viewProfile(std::vector<std::pair<string, User>> &my_friends) const;
+
     static void groupMenu();
 
 private:

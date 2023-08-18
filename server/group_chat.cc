@@ -181,15 +181,21 @@ void GroupChat::groupHistory() const {
 }
 
 void GroupChat::managedGroup() const {
+    Redis redis;
+    redis.connect();
     Group group;
     string group_info;
 
     recvMsg(fd, group_info);
     group.json_parse(group_info);
     string choice;
+    int ret;
     while (true) {
 
-        recvMsg(fd, choice);
+        ret=recvMsg(fd, choice);
+        if(ret==0){
+            redis.hdel("is_online",user.getUID());
+        }
         if (choice == "0") {
             break;
         }
@@ -220,7 +226,10 @@ void GroupChat::approve(Group &group) const {
 
         sendMsg(fd, member.getUsername());
 
-        recvMsg(fd, choice);
+        int ret=recvMsg(fd, choice);
+        if(ret==0){
+            redis.hget("is_online",user.getUID());
+        }
         if (choice == "refused") {
             //删除缓冲区
             redis.srem("if_add" + group.getGroupUid(), member.getUID());
@@ -266,6 +275,8 @@ void GroupChat::remove(Group &group) const {
 }
 
 void GroupChat::managedCreatedGroup() const {
+    Redis redis;
+    redis.connect();
     string group_info;
 
     recvMsg(fd, group_info);
@@ -274,7 +285,10 @@ void GroupChat::managedCreatedGroup() const {
     string choice;
     while (true) {
 
-        recvMsg(fd, choice);
+        int ret=recvMsg(fd, choice);
+        if(ret==0){
+            redis.hdel("is_online",user.getUID());
+        }
         if (choice == "0") {
             break;
         }
@@ -304,7 +318,10 @@ void GroupChat::appointAdmin(Group &group) const {
     }
     string member_choose;
 
-    recvMsg(fd, member_choose);
+    int ret=recvMsg(fd, member_choose);
+    if(ret==0){
+        redis.hdel("is_online",user.getUID());
+    }
     User member;
     member.json_parse(member_choose);
     //选择的已经是管理员了

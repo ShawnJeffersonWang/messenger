@@ -58,6 +58,14 @@ void start_chat(int fd, User &user) {
         sendMsg(fd, arr[i]->str);
         freeReplyObject(arr[i]);
     }
+    string friend_uid;
+    //接收客户端发送的想要聊天的好友的UID，判断是否拉黑的逻辑
+    recvMsg(fd, friend_uid);
+    if (redis.sismember("blocked" + friend_uid, user.getUID())) {
+        sendMsg(fd, "-1");
+        return;
+    }
+    sendMsg(fd, "1");
     string msg;
     while (true) {
         int ret = recvMsg(fd, msg);
@@ -65,18 +73,18 @@ void start_chat(int fd, User &user) {
             //给线程发消息
             sendMsg(fd, EXIT);
             redis.srem("is_chat", user.getUID());
-            if(ret==0){
-                close(fd);
-                redis.hdel("is_online",user.getUID());
+            //用户异常退出直接删除在线列表
+            if (ret == 0) {
+                redis.hdel("is_online", user.getUID());
             }
             return;
         }
         Message message;
         message.json_parse(msg);
         string UID = message.getUidTo();
-        if (redis.sismember("blocked" + UID, user.getUID())) {
-            continue;
-        }
+//        if (redis.sismember("blocked" + UID, user.getUID())) {
+//            continue;
+//        }
         //对方不在线
         if (!redis.hexists("is_online", UID)) {
             redis.hset("chat", UID, message.getUsername());
@@ -284,9 +292,13 @@ void group(int fd, User &user) {
             {8,  [groupChat]() mutable { groupChat.quit(); }},
             {11, [groupChat]()mutable { groupChat.sync(); }}
     };
+    int ret;
     while (true) {
 
-        recvMsg(fd, choice);
+        ret = recvMsg(fd, choice);
+        if (ret == 0) {
+            redis.hdel("is_online", user.getUID());
+        }
         if (choice == BACK) {
             break;
         }
@@ -311,8 +323,12 @@ void send_file(int fd, User &user) {
     }
     _friend.json_parse(friend_info);
     string filePath, fileName;
+    int ret;
 
-    recvMsg(fd, filePath);
+    ret = recvMsg(fd, filePath);
+    if (ret == 0) {
+        redis.hdel("is_online", user.getUID());
+    }
 
     recvMsg(fd, fileName);
     cout << "传输文件名: " << fileName << endl;
@@ -378,7 +394,10 @@ void receive_file(int fd, User &user) {
             }
             string reply;
 
-            recvMsg(fd, reply);
+            int _ret = recvMsg(fd, reply);
+            if (_ret == 0) {
+                redis.hdel("is_online", user.getUID());
+            }
             if (reply == "NO") {
                 cout << "拒接接收文件" << endl;
                 redis.srem("recv" + user.getUID(), arr[i]->str);

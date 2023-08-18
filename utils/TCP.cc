@@ -6,6 +6,8 @@
 #include <cstring>
 
 using namespace std;
+string IP;
+int PORT;
 
 void sys_err(const char *str) {
     perror(str);
@@ -28,7 +30,7 @@ void Listen(int fd, int backlog) {
     }
 }
 
-void Bind(int fd, int port, const string &ip) {
+void Bind(int fd, const string &ip, int port) {
     struct sockaddr_in srv_addr;
     memset(&srv_addr, 0, sizeof(srv_addr));
     srv_addr.sin_family = AF_INET;

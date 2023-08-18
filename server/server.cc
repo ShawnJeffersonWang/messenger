@@ -15,10 +15,21 @@
 using namespace std;
 
 void signalHandler(int signum) {
-    cout << "signum: "<<signum << endl;
+    cout << "signum: " << signum << endl;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        IP = "10.30.0.202";
+        PORT = 8888;
+    } else if (argc == 3) {
+        IP = argv[1];
+        PORT = stoi(argv[2]);
+    } else {
+        // 错误情况
+        cerr << "Invalid number of arguments. Usage: program_name [IP] [port]" << endl;
+        return 1;
+    }
     signal(SIGPIPE, signalHandler);
     int ret;
     int num = 0;
@@ -29,7 +40,7 @@ int main() {
     int listenfd = Socket();
     int opt = 1;
     setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (void *) &opt, sizeof(opt));
-    Bind(listenfd, PORT);
+    Bind(listenfd, IP, PORT);
     Listen(listenfd);
     int epfd = epoll_create(1024);
 
@@ -55,7 +66,7 @@ int main() {
                 int connfd = Accept(listenfd, (struct sockaddr *) &cli_addr, &cli_len);
 
                 cout << "received from " << inet_ntop(AF_INET, &cli_addr.sin_addr.s_addr, str, sizeof(str))
-                     << " at PORT " << ntohs(cli_addr.sin_port) << endl;
+                     << " at port " << ntohs(cli_addr.sin_port) << endl;
                 cout << "cfd " << connfd << "-----client " << ++num << endl;
 
                 int flag = fcntl(connfd, F_GETFL);

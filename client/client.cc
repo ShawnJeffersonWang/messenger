@@ -17,7 +17,18 @@ using namespace std;
 
 //测试帐号
 //直接将void start_menu(int fd, User &user)写在main函数中，减少user和fd的一次转发，并且可以直接用上循环的逻辑
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        IP = "10.30.0.202";
+        PORT = 8888;
+    } else if (argc == 3) {
+        IP = argv[1];
+        PORT = stoi(argv[2]);
+    } else {
+        // 错误情况
+        cerr << "Invalid number of arguments. Usage: program_name [IP] [port]" << endl;
+        return 1;
+    }
     //signal(SIGINT, signalHandler);
     int fd;
     User user;

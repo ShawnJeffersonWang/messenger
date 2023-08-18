@@ -76,7 +76,7 @@ int recvMsg(int fd, string &msg) {
     char *data = (char *) malloc(sizeof(char) * (len + 1));
     int ret = read_n(fd, data, len);
     if (ret == 0) {
-        std::cout << "对端断开连接" << std::endl;
+        cout << "对端断开连接" << endl;
         close(fd);
     } else if (ret != len) {
         cout << "数据接收失败" << endl;
