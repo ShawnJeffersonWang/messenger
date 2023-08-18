@@ -63,6 +63,10 @@ void clientOperation(int fd, User &user) {
         operationMenu();
         string option;
         getline(cin, option);
+        if (option.empty()) {
+            cout << "输入为空" << endl;
+            return;
+        }
         if (option.length() > 4) {
             cout << "输入错误" << endl;
             continue;
@@ -96,12 +100,12 @@ void clientOperation(int fd, User &user) {
 }
 
 void operationMenu() {
-    cout << setw(30) << left << "[1]开始聊天"  << "[2]历史记录" << endl;
-    cout << setw(30) << left << "[3]查看好友"  << "[4]添加好友" << endl;
-    cout << setw(30) << left << "[5]查看添加好友请求"  << "[6]删除好友" << endl;
-    cout << setw(30) << left << "[7]屏蔽好友"  << "[8]解除屏蔽" << endl;
-    cout << setw(30) << left << "[9]群聊"  << "[10]发送文件" << endl;
-    cout << setw(30) << left << "[11]接收文件"  << "[12]查看我的个人信息" << endl;
+    cout << "[1]开始聊天                  [2]历史记录" << endl;
+    cout << "[3]查看好友                  [4]添加好友" << endl;
+    cout << "[5]查看添加好友请求           [6]删除好友" << endl;
+    cout << "[7]屏蔽好友                  [8]解除屏蔽" << endl;
+    cout << "[9]群聊                      [10]发送文件" << endl;
+    cout << "[11]接收文件                 [12]查看我的个人信息" << endl;
     cout << "按[0]返回" << endl;
     cout << "请输入您的选择" << endl;
 }

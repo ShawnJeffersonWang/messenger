@@ -45,6 +45,10 @@ int main(int argc, char *argv[]) {
         start_UI();
         string option;
         getline(cin, option);
+        if (option.empty()) {
+            cout << "输入为空！" << endl;
+            continue;
+        }
         if (option != "0" && option != "1" && option != "2") {
             cout << "没有这个选项！" << endl;
             continue;

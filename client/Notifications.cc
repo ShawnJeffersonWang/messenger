@@ -18,7 +18,7 @@ void announce(string UID) {
     string buf;
     int num;
     while (true) {
-        //read::_for(chrono::seconds(3));
+        //this_thread::sleep_for(chrono::seconds(3));
 
         sendMsg(announce_fd, NOTIFY);
 
@@ -35,7 +35,9 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        num = stoi(buf);
+        if (!buf.empty()&&isNumericString(buf)) {
+            num = stoi(buf);
+        }
         for (int i = 0; i < num; ++i) {
 
             recvMsg(announce_fd, buf);
@@ -43,7 +45,9 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        num = stoi(buf);
+        if (!buf.empty()&&isNumericString(buf)) {
+            num = stoi(buf);
+        }
         for (int i = 0; i < num; i++) {
             recvMsg(announce_fd, buf);
 
@@ -51,20 +55,34 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        num = stoi(buf);
+        if (!buf.empty()&&isNumericString(buf)) {
+            num = stoi(buf);
+        }
         for (int i = 0; i < num; i++) {
             recvMsg(announce_fd, buf);
             cout << "您已被取消" << buf << "的管理权限" << endl;
         }
 
         recvMsg(announce_fd, buf);
-        num = stoi(buf);
+        if (!buf.empty()&&isNumericString(buf)) {
+            num = stoi(buf);
+        }
         for (int i = 0; i < num; i++) {
             recvMsg(announce_fd, buf);
             cout << "收到" << buf << "发送的文件" << endl;
         }
     }
 }
+
+bool isNumericString(const std::string &str) {
+    for (char c: str) {
+        if (!std::isdigit(c)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 //现在开的线程全部不使用引用
 //私聊群聊，接收对方发送的消息
 void chatReceived(int fd, string UID) {

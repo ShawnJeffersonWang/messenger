@@ -192,9 +192,9 @@ void GroupChat::managedGroup() const {
     int ret;
     while (true) {
 
-        ret=recvMsg(fd, choice);
-        if(ret==0){
-            redis.hdel("is_online",user.getUID());
+        ret = recvMsg(fd, choice);
+        if (ret == 0) {
+            redis.hdel("is_online", user.getUID());
         }
         if (choice == "0") {
             break;
@@ -226,9 +226,9 @@ void GroupChat::approve(Group &group) const {
 
         sendMsg(fd, member.getUsername());
 
-        int ret=recvMsg(fd, choice);
-        if(ret==0){
-            redis.hget("is_online",user.getUID());
+        int ret = recvMsg(fd, choice);
+        if (ret == 0) {
+            redis.hget("is_online", user.getUID());
         }
         if (choice == "refused") {
             //删除缓冲区
@@ -285,9 +285,9 @@ void GroupChat::managedCreatedGroup() const {
     string choice;
     while (true) {
 
-        int ret=recvMsg(fd, choice);
-        if(ret==0){
-            redis.hdel("is_online",user.getUID());
+        int ret = recvMsg(fd, choice);
+        if (ret == 0) {
+            redis.hdel("is_online", user.getUID());
         }
         if (choice == "0") {
             break;
@@ -318,9 +318,9 @@ void GroupChat::appointAdmin(Group &group) const {
     }
     string member_choose;
 
-    int ret=recvMsg(fd, member_choose);
-    if(ret==0){
-        redis.hdel("is_online",user.getUID());
+    int ret = recvMsg(fd, member_choose);
+    if (ret == 0) {
+        redis.hdel("is_online", user.getUID());
     }
     User member;
     member.json_parse(member_choose);

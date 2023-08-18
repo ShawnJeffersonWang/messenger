@@ -36,6 +36,10 @@ public:
 
     void hdel(const string &key, const string &field);
 
+    redisReply **hgetall(const string &key);
+
+    int hlen(const string &key);
+
     bool hexists(const string &key, const string &field);
 
     int llen(const string &key);

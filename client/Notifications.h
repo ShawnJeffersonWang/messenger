@@ -11,4 +11,6 @@ void announce(string UID);
 
 void chatReceived(int fd, string UID);
 
+bool isNumericString(const std::string &str);
+
 #endif //CHATROOM_NOTIFICATIONS_H

@@ -58,7 +58,7 @@ void User::setUsername(string name) {
     username = std::move(name);
 }
 
-string User::getMyTime()const {
+string User::getMyTime() const {
     return my_time;
 }
 

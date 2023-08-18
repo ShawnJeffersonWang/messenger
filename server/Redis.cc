@@ -8,8 +8,12 @@ using namespace std;
 
 //server的所有代码的核心都落在数据库的操作上，使用数据库的数据，入库
 Redis::Redis() : context(nullptr), reply(nullptr) {}
-
-Redis::~Redis() = default;
+//smbug 之前没写析构函数，我真是nm艹了，怎么想的到是redis的问题，redis一直在开文件描述符，导致服务器和客户端都崩了
+Redis::~Redis() {
+    redisFree(context);
+    context = nullptr;
+    reply = nullptr;
+}
 
 void Redis::connect() {
     context = redisConnect("127.0.0.1", 6379);
@@ -79,7 +83,7 @@ void Redis::hset(const string &key, const string &field, const string &value) {
 void Redis::hdel(const string &key, const string &field) {
     //我nm真是艹了 key和field之间没有加空格
     //bug2 并且nm写成了HEDL
-    string command = "HDEL " + key +" "+ field;
+    string command = "HDEL " + key + " " + field;
     reply = static_cast<redisReply *>(redisCommand(context, command.c_str()));
     freeReplyObject(reply);
 }
@@ -122,4 +126,18 @@ void Redis::ltrim(const string &key) {
     string command = "LTRIM " + key + " 1 0";
     reply = static_cast<redisReply *>(redisCommand(context, command.c_str()));
     freeReplyObject(reply);
+}
+
+redisReply **Redis::hgetall(const string &key) {
+    string command = "HGETALL " + key;
+    reply = static_cast<redisReply *>(redisCommand(context, command.c_str()));
+    return reply->element;
+}
+
+int Redis::hlen(const string &key) {
+    string command = "HLEN " + key;
+    reply = static_cast<redisReply *>(redisCommand(context, command.c_str()));
+    int integer = reply->integer;
+    freeReplyObject(reply);
+    return integer;
 }

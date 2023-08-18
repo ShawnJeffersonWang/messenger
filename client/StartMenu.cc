@@ -54,7 +54,7 @@ void get_password(string &password) {
     cout << endl;
 }
 
-int login(int fd,User &user) {
+int login(int fd, User &user) {
     sendMsg(fd, LOGIN);
     string UID;
     string passwd;

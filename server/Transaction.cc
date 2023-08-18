@@ -317,13 +317,15 @@ void send_file(int fd, User &user) {
     string friend_info;
     //接收发送文件的对象
     User _friend;
-    recvMsg(fd, friend_info);
+    int ret = recvMsg(fd, friend_info);
+    if (ret == 0) {
+        redis.hdel("is_online", user.getUID());
+    }
     if (friend_info == BACK) {
         return;
     }
     _friend.json_parse(friend_info);
     string filePath, fileName;
-    int ret;
 
     ret = recvMsg(fd, filePath);
     if (ret == 0) {
@@ -359,7 +361,7 @@ void send_file(int fd, User &user) {
         if (n < 0) {
             continue;
         }
-        cout << "传输文件大小: " << size << endl;
+        cout << "剩余文件大小: " << size << endl;
         size -= n;
         sum += n;
         ofs.write(buf, n);

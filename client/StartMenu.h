@@ -14,7 +14,7 @@ char getch();
 
 void get_password(std::string &password);
 
-int login(int fd,User&user);
+int login(int fd, User &user);
 
 void client_register(int fd);
 

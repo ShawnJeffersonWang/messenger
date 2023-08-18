@@ -10,6 +10,7 @@
 #include <csignal>
 #include "ThreadPool.hpp"
 #include "proto.h"
+#include "Redis.h"
 /*通过将模板函数的声明和定义放在同一个头文件中，并将其包含到需要使用模板函数的源文件中
  * 可以确保编译器在实例化模板函数时能够正确找到模板函数的定义*/
 using namespace std;
@@ -31,6 +32,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     signal(SIGPIPE, signalHandler);
+    //服务器启动时删除所有在线用户
+    Redis redis;
+    redis.connect();
+    int len = redis.hlen("is_online");
+    redisReply **arr = redis.hgetall("is_online");
+    for (int i = 0; i < len; i++) {
+        redis.hdel("is_online", arr[i]->str);
+    }
+
     int ret;
     int num = 0;
     char str[INET_ADDRSTRLEN];

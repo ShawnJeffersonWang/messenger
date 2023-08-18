@@ -129,9 +129,6 @@ void Telegram::startChat(vector<pair<string, User>> &my_friends) {
             system("sync");
             break;
         }
-        if (msg[0] == 27) {
-
-        }
         message.setContent(msg);
         json = message.to_json();
         //发送聊天消息
@@ -142,6 +139,16 @@ void Telegram::startChat(vector<pair<string, User>> &my_friends) {
 }
 
 void Telegram::findHistory(vector<pair<string, User>> &my_friends) const {
+    string temp;
+    if (my_friends.empty()) {
+        cout << "您当前没有好友捏... 请按任意键退出" << endl;
+        getline(cin, temp);
+        if (cin.eof()) {
+            cout << "读到文件结尾" << endl;
+            return;
+        }
+        return;
+    }
     sendMsg(fd, HISTORY);
     cout << "好友列表" << endl;
     cout << "-----------------------------------" << endl;
@@ -180,7 +187,6 @@ void Telegram::findHistory(vector<pair<string, User>> &my_friends) const {
             cout << message.getUsername() << ": " << message.getContent() << endl;
         }
     }
-    string temp;
     cout << "请按任意键退出" << endl;
     getline(cin, temp);
     if (cin.eof()) {
@@ -190,6 +196,16 @@ void Telegram::findHistory(vector<pair<string, User>> &my_friends) const {
 }
 
 void Telegram::listFriends(vector<pair<string, User>> &my_friends) {
+    string temp;
+    if (my_friends.empty()) {
+        cout << "您当前没有好友捏... 请按任意键退出" << endl;
+        getline(cin, temp);
+        if (cin.eof()) {
+            cout << "读到文件结尾" << endl;
+            return;
+        }
+        return;
+    }
     sendMsg(fd, LIST_FRIENDS);
     string is_online;
     cout << user.getUsername() << "的好友列表" << endl;
@@ -210,7 +226,6 @@ void Telegram::listFriends(vector<pair<string, User>> &my_friends) {
     }
     cout << "-----------------------------------------" << endl;
     cout << "按任意键退出" << endl;
-    string temp;
     getline(cin, temp);
     if (cin.eof()) {
         cout << "读到文件结尾" << endl;
@@ -312,6 +327,16 @@ void Telegram::findRequest(vector<pair<string, User>> &my_friends) const {
 }
 
 void Telegram::delFriend(vector<pair<string, User>> &my_friends) {
+    string temp;
+    if (my_friends.empty()) {
+        cout << "您当前没有好友捏... 请按任意键退出" << endl;
+        getline(cin, temp);
+        if (cin.eof()) {
+            cout << "读到文件结尾" << endl;
+            return;
+        }
+        return;
+    }
     cout << "     " << user.getUsername() << "的好友列表" << endl;
     cout << "----------------------------------------" << endl;
     for (int i = 0; i < my_friends.size(); ++i) {
@@ -347,6 +372,16 @@ void Telegram::delFriend(vector<pair<string, User>> &my_friends) {
 }
 
 void Telegram::blockedLists(vector<pair<string, User>> &my_friends) const {
+    string temp;
+    if (my_friends.empty()) {
+        cout << "您当前没有好友捏... 请按任意键退出" << endl;
+        getline(cin, temp);
+        if (cin.eof()) {
+            cout << "读到文件结尾" << endl;
+            return;
+        }
+        return;
+    }
     cout << "好友列表" << endl;
     cout << "-----------------------------------------" << endl;
     for (int i = 0; i < my_friends.size(); ++i) {
@@ -371,7 +406,6 @@ void Telegram::blockedLists(vector<pair<string, User>> &my_friends) const {
 
     sendMsg(fd, my_friends[who].second.getUID());
     cout << "您已成功屏蔽" << my_friends[who].second.getUsername() << ", 按任意键退出" << endl;
-    string temp;
     getline(cin, temp);
     if (cin.eof()) {
         cout << "读到文件结尾" << endl;
@@ -453,6 +487,9 @@ void Telegram::group(vector<pair<string, User>> &my_friends) const {
 
         sendMsg(fd, "11");
         groupChat.sync(createdGroup, managedGroup, joinedGroup);
+        if (option == 0) {
+            return;
+        }
         if (option == 1) {
             groupChat.startChat(joinedGroup);
             continue;
@@ -490,8 +527,6 @@ void Telegram::group(vector<pair<string, User>> &my_friends) const {
 
 void Telegram::sendFile(vector<pair<string, User>> &my_friends) const {
     system("clear");
-
-    sendMsg(fd, SEND_FILE);
     if (my_friends.empty()) {
         cout << "您当前还没有好友" << endl;
         cout << "按任意键退出" << endl;
@@ -501,10 +536,10 @@ void Telegram::sendFile(vector<pair<string, User>> &my_friends) const {
             cout << "读到文件结尾" << endl;
             return;
         }
-
-        sendMsg(fd,BACK);
         return;
     }
+
+    sendMsg(fd, SEND_FILE);
     cout << "-------------------------------------------------" << endl;
     for (int i = 0; i < my_friends.size(); ++i) {
         cout << i + 1 << ". " << my_friends[i].second.getUsername() << endl;
@@ -672,9 +707,9 @@ void Telegram::groupMenu() {
 }
 
 void Telegram::viewProfile(vector<std::pair<string, User>> &my_friends) const {
-    cout << setw(20) << left << "您的用户创建时间为" << setw(20) << right << user.getMyTime() << endl;
-    cout << setw(20) << left << "您的UID为" << setw(20) << right << user.getUID() << endl;
-    cout << setw(20) << left << "您的用户名是" << setw(20) << right << user.getUsername() << endl;
+    cout << "您的用户创建时间为: " << user.getMyTime() << endl;
+    cout << "您的UID为: " << user.getUID() << endl;
+    cout << "您的用户名是: " << user.getUsername() << endl;
     cout << "按任意键退出" << endl;
     string temp;
     getline(cin, temp);

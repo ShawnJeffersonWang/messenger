@@ -60,6 +60,6 @@ int main() {
     //User user;
     //string time=user.getUID();
     cout << (int) NULL << endl;
-    Group group("1","2");
-    cout <<"UID: " <<group.getGroupUid() << endl;
+    Group group("1", "2");
+    cout << "UID: " << group.getGroupUid() << endl;
 }
