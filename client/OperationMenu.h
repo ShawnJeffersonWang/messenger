@@ -7,7 +7,7 @@
 
 #include "User.h"
 
-void operationMenu(User &User);
+void operationMenu();
 
 void clientOperation(int fd, User &user);
 

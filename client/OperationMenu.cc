@@ -60,7 +60,7 @@ void clientOperation(int fd, User &user) {
 //        std::cout << "选项格式错误 请重新输入" << std::endl;
 //    }
     while (true) {
-        operationMenu(user);
+        operationMenu();
         string option;
         getline(cin, option);
         if (option.length() > 4) {
@@ -95,7 +95,7 @@ void clientOperation(int fd, User &user) {
     }
 }
 
-void operationMenu(User &user) {
+void operationMenu() {
     cout << setw(30) << left << "[1]开始聊天"  << "[2]历史记录" << endl;
     cout << setw(30) << left << "[3]查看好友"  << "[4]添加好友" << endl;
     cout << setw(30) << left << "[5]查看添加好友请求"  << "[6]删除好友" << endl;

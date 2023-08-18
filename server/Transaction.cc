@@ -379,51 +379,55 @@ void receive_file(int fd, User &user) {
     sendMsg(fd, to_string(num));
     Message message;
     string path;
-    if (num != 0) {
-        redisReply **arr = redis.smembers("recv" + user.getUID());
-        for (int i = 0; i < num; i++) {
+    if (num == 0) {
+        cout << "当前没有要接收的文件" << endl;
+        return;
+    }
 
-            sendMsg(fd, arr[i]->str);
-            message.json_parse(arr[i]->str);
-            path = message.getContent();
-            struct stat info;
-            if (stat(path.c_str(), &info) == -1) {
-                cout << "非法的路径名" << endl;
-                cout << path.c_str() << endl;
-                return;
-            }
-            string reply;
+    redisReply **arr = redis.smembers("recv" + user.getUID());
+    for (int i = 0; i < num; i++) {
 
-            int _ret = recvMsg(fd, reply);
-            if (_ret == 0) {
-                redis.hdel("is_online", user.getUID());
-            }
-            if (reply == "NO") {
-                cout << "拒接接收文件" << endl;
-                redis.srem("recv" + user.getUID(), arr[i]->str);
-                freeReplyObject(arr[i]);
-            }
-
-            int fp = open(path.c_str(), O_RDONLY);
-
-            sendMsg(fd, to_string(info.st_size));
-            off_t ret;
-            off_t sum = info.st_size;
-            off_t size = 0;
-            while (true) {
-                ret = sendfile(fd, fp, nullptr, info.st_size);
-                if (ret == 0) {
-                    cout << "文件传输成功" << buf << endl;
-                    break;
-                } else if (ret > 0) {
-                    cout << ret << endl;
-                    sum -= ret;
-                    size += ret;
-                }
-            }
-            redis.srem("recv" + user.getUID(), arr[i]->str);
-            close(fd);
-            freeReplyObject(arr[i]);
+        sendMsg(fd, arr[i]->str);
+        message.json_parse(arr[i]->str);
+        path = message.getContent();
+        struct stat info;
+        if (stat(path.c_str(), &info) == -1) {
+            cout << "非法的路径名" << endl;
+            cout << path.c_str() << endl;
+            return;
         }
+        string reply;
+
+        int _ret = recvMsg(fd, reply);
+        if (_ret == 0) {
+            redis.hdel("is_online", user.getUID());
+        }
+        if (reply == "NO") {
+            cout << "拒接接收文件" << endl;
+            redis.srem("recv" + user.getUID(), arr[i]->str);
+            freeReplyObject(arr[i]);
+            continue;
+        }
+
+        int fp = open(path.c_str(), O_RDONLY);
+
+        sendMsg(fd, to_string(info.st_size));
+        off_t ret;
+        off_t sum = info.st_size;
+        off_t size = 0;
+        while (true) {
+            ret = sendfile(fd, fp, nullptr, info.st_size);
+            if (ret == 0) {
+                cout << "文件传输成功" << buf << endl;
+                break;
+            } else if (ret > 0) {
+                cout << ret << endl;
+                sum -= ret;
+                size += ret;
+            }
+        }
+        redis.srem("recv" + user.getUID(), arr[i]->str);
+        close(fp);
+        freeReplyObject(arr[i]);
     }
 }
