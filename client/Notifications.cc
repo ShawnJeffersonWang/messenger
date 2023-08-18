@@ -18,7 +18,7 @@ void announce(string UID) {
     string buf;
     int num;
     while (true) {
-        this_thread::sleep_for(chrono::seconds(3));
+        //read::_for(chrono::seconds(3));
 
         sendMsg(announce_fd, NOTIFY);
 

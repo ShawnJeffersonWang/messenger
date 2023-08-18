@@ -67,7 +67,7 @@ void ThreadPool::worker() {
 
 void ThreadPool::manager() {
     while (!manager_stopped) {
-        //std::this_thread::sleep_for(std::chrono::seconds(3));
+        //std::this_thread::_for(std::chrono::seconds(3));
         unique_lock<mutex> lock(pool_lock);
 //        cout << "tasks.size(): " << tasks.size() << endl;
 //        cout << "alive_num: " << alive_num << endl;
