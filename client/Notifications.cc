@@ -30,12 +30,17 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
+        if (buf == GROUP_REQUEST) {
+            cout << "您收到一条群聊添加申请" << endl;
+        }
+
+        recvMsg(announce_fd, buf);
         if (buf != "NO") {
             cout << "收到一条来自" << buf << "的消息" << endl;
         }
 
         recvMsg(announce_fd, buf);
-        if (!buf.empty()&&isNumericString(buf)) {
+        if (!buf.empty() && isNumericString(buf)) {
             num = stoi(buf);
         }
         for (int i = 0; i < num; ++i) {
@@ -45,7 +50,7 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        if (!buf.empty()&&isNumericString(buf)) {
+        if (!buf.empty() && isNumericString(buf)) {
             num = stoi(buf);
         }
         for (int i = 0; i < num; i++) {
@@ -55,7 +60,7 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        if (!buf.empty()&&isNumericString(buf)) {
+        if (!buf.empty() && isNumericString(buf)) {
             num = stoi(buf);
         }
         for (int i = 0; i < num; i++) {
@@ -64,7 +69,7 @@ void announce(string UID) {
         }
 
         recvMsg(announce_fd, buf);
-        if (!buf.empty()&&isNumericString(buf)) {
+        if (!buf.empty() && isNumericString(buf)) {
             num = stoi(buf);
         }
         for (int i = 0; i < num; i++) {

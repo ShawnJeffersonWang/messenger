@@ -129,7 +129,8 @@ void serverOperation(int fd, User &user) {
             {12, group},
             {13, send_file},
             {14, receive_file},
-            {16, synchronize}
+            //改协议后，同步出错
+            {17, synchronize}
     };
     Redis redis;
     redis.connect();
@@ -177,6 +178,15 @@ void notify(int fd) {
 
         sendMsg(fd, REQUEST_NOTIFICATION);
         redis.srem("add_friend", UID);
+    } else {
+
+        sendMsg(fd, "NO");
+    }
+    //判断是否有加群
+    if (redis.sismember("add_group", UID)) {
+
+        sendMsg(fd, GROUP_REQUEST);
+        redis.srem("add_group", UID);
     } else {
 
         sendMsg(fd, "NO");

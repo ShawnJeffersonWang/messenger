@@ -8,6 +8,7 @@ using namespace std;
 
 //server的所有代码的核心都落在数据库的操作上，使用数据库的数据，入库
 Redis::Redis() : context(nullptr), reply(nullptr) {}
+
 //smbug 之前没写析构函数，我真是nm艹了，怎么想的到是redis的问题，redis一直在开文件描述符，导致服务器和客户端都崩了
 Redis::~Redis() {
     redisFree(context);

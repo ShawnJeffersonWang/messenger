@@ -471,6 +471,7 @@ void Telegram::group(vector<pair<string, User>> &my_friends) const {
     vector<Group> managedGroup;
     vector<Group> createdGroup;
     GroupChat groupChat(fd, user);
+    groupChat.sync(createdGroup, managedGroup, joinedGroup);
     int option;
     while (true) {
         groupMenu();
@@ -488,6 +489,7 @@ void Telegram::group(vector<pair<string, User>> &my_friends) const {
         sendMsg(fd, "11");
         groupChat.sync(createdGroup, managedGroup, joinedGroup);
         if (option == 0) {
+            sendMsg(fd, BACK);
             return;
         }
         if (option == 1) {
@@ -515,9 +517,12 @@ void Telegram::group(vector<pair<string, User>> &my_friends) const {
             groupChat.quit(joinedGroup);
             continue;
         } else if (option == 9) {
-            groupChat.showGroup(joinedGroup);
+            groupChat.showJoinedGroup(joinedGroup);
             continue;
         } else if (option == 10) {
+            groupChat.showManagedGroup(managedGroup);
+            continue;
+        } else if (option == 11) {
             groupChat.showCreatedGroup(createdGroup);
             continue;
         }
@@ -695,13 +700,15 @@ void Telegram::receiveFile(vector<std::pair<string, User>> &my_friends) const {
     }
     system("clear");
 }
+
 //bug UI提示错误
 void Telegram::groupMenu() {
     cout << "[1]开始聊天                     [2]创建群聊" << endl;
     cout << "[3]加入群聊                     [4]查看群聊历史记录" << endl;
     cout << "[5]管理我的群                   [6]管理我创建的群" << endl;
     cout << "[7]查看群成员                   [8]退出群聊" << endl;
-    cout << "[9]查看我的群                   [10]查看我创建的群" << endl;
+    cout << "[9]查看我加入的群                   [10]查看我管理的群" << endl;
+    cout << "[11]查看我创建的群" << endl;
     cout << "[0]返回" << endl;
     cout << "请输入您的选择" << endl;
 }

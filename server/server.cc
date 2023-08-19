@@ -22,6 +22,7 @@ void signalHandler(int signum) {
 int main(int argc, char *argv[]) {
     if (argc == 1) {
         IP = "10.30.0.202";
+        //IP="172.20.10.13";
         PORT = 8888;
     } else if (argc == 3) {
         IP = argv[1];

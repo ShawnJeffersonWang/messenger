@@ -26,9 +26,10 @@ const string GROUP = "12";
 const string SEND_FILE = "13";
 const string RECEIVE_FILE = "14";
 const string REQUEST_NOTIFICATION = "15";
-const string SYNC = "16";
-const string EXIT = "17";
-const string BACK = "18";
+const string GROUP_REQUEST = "16";
+const string SYNC = "17";
+const string EXIT = "18";
+const string BACK = "19";
 /*\033[30m：黑色
 \033[31m：红色
 \033[32m：绿色

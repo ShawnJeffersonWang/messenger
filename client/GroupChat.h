@@ -49,7 +49,9 @@ public:
 
     void quit(std::vector<Group> &);
 
-    void showGroup(const std::vector<Group> &);
+    void showJoinedGroup(const std::vector<Group> &joinedGroup);
+
+    void showManagedGroup(std::vector<Group> &managedGroup);
 
     void showCreatedGroup(std::vector<Group> &createdGroup);
 

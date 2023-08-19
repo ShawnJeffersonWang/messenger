@@ -86,8 +86,8 @@ void GroupChat::startChat() {
     Message message;
     while (true) {
         int ret = recvMsg(fd, msg);
-        if (msg == "0" || ret == 0) {
-            sendMsg(fd, "0");
+        if (msg == EXIT || ret == 0) {
+            sendMsg(fd, EXIT);
             redis.srem("group_chat", user.getUID());
             return;
         }
@@ -152,6 +152,9 @@ void GroupChat::joinGroup() {
         sendMsg(fd, "-1");
         return;
     }
+    string json = redis.hget("group_info", groupUid);
+    Group group;
+    group.json_parse(json);
     //已经加入该群
     if (redis.sismember(joined, groupUid)) {
         sendMsg(fd, "-2");
@@ -160,6 +163,12 @@ void GroupChat::joinGroup() {
 
     sendMsg(fd, "1");
     redis.sadd("if_add" + groupUid, user.getUID());
+    //群聊实时通知
+    int num = redis.scard(group.getAdmins());
+    redisReply **arr = redis.smembers(group.getAdmins());
+    for (int i = 0; i < num; i++) {
+        redis.sadd("add_group", arr[i]->str);
+    }
 }
 
 void GroupChat::groupHistory() const {
@@ -196,7 +205,7 @@ void GroupChat::managedGroup() const {
         if (ret == 0) {
             redis.hdel("is_online", user.getUID());
         }
-        if (choice == "0") {
+        if (choice == BACK) {
             break;
         }
         if (choice == "1") {
@@ -228,9 +237,9 @@ void GroupChat::approve(Group &group) const {
 
         int ret = recvMsg(fd, choice);
         if (ret == 0) {
-            redis.hget("is_online", user.getUID());
+            redis.hdel("is_online", user.getUID());
         }
-        if (choice == "refused") {
+        if (choice == "n") {
             //删除缓冲区
             redis.srem("if_add" + group.getGroupUid(), member.getUID());
         } else {

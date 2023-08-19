@@ -88,7 +88,7 @@ void clientOperation(int fd, User &user) {
         }
 
         if (FunctionOption.find(opt) == FunctionOption.end()) {
-            cout << "没有这个选项，请重新输入" << endl;
+            //cout << "没有这个选项，请重新输入" << endl;
             continue;
         }
         //同步服务器
