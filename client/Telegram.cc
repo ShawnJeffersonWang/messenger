@@ -685,7 +685,7 @@ void Telegram::receiveFile(vector<std::pair<string, User>> &my_friends) const {
             } else {
                 n = read_n(fd, buf, size);
             }
-            cout << "size = " << size << endl;
+            //cout << "size = " << size << endl;
             size -= n;
             ofs.write(buf, n);
         }
@@ -707,7 +707,7 @@ void Telegram::groupMenu() {
     cout << "[3]加入群聊                     [4]查看群聊历史记录" << endl;
     cout << "[5]管理我的群                   [6]管理我创建的群" << endl;
     cout << "[7]查看群成员                   [8]退出群聊" << endl;
-    cout << "[9]查看我加入的群                   [10]查看我管理的群" << endl;
+    cout << "[9]查看我加入的群                [10]查看我管理的群" << endl;
     cout << "[11]查看我创建的群" << endl;
     cout << "[0]返回" << endl;
     cout << "请输入您的选择" << endl;

@@ -89,6 +89,9 @@ void GroupChat::startChat() {
         if (msg == EXIT || ret == 0) {
             sendMsg(fd, EXIT);
             redis.srem("group_chat", user.getUID());
+            if (ret == 0) {
+                redis.hdel("is_online", user.getUID());
+            }
             return;
         }
         message.json_parse(msg);

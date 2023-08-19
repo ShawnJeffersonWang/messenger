@@ -334,6 +334,7 @@ void send_file(int fd, User &user) {
     recvMsg(fd, fileName);
     cout << "传输文件名: " << fileName << endl;
     filePath = "./fileBuffer/" + fileName;
+    //最后一个groupName填了文件名，接收的时候会显示
     Message message(user.getUsername(), user.getUID(), _friend.getUID(), fileName);
     message.setContent(filePath);
     if (!filesystem::exists("./fileBuffer")) {
